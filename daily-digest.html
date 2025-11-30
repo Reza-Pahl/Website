@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Frontline.io Daily Digest — Third Coast AI</title>
+
+  <meta name="description" content="Daily buying-signal digest project overview." />
+
+  <!-- Use the same favicon + stylesheet -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='160'>⚙️</text></svg>">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="brand">Third Coast AI</h1>
+    </div>
+  </header>
+
+  <main class="container section">
+    <h2>Frontline.io Daily Digest — Buying Signals</h2>
+
+    <p class="muted">A lightweight AI agent that tracks news and operational signals for ICP accounts, then sends a daily email digest to sales teams.</p>
+
+    <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+
+    <h3>What it does</h3>
+    <p>
+      This workflow monitors public news, press releases, funding events, leadership changes,
+      manufacturing expansions, and other “buying signals” across a list of target accounts.
+    </p>
+
+    <p>
+      Each morning, the system generates a clean, prioritized digest with short summaries, links,
+      and recommended outreach angles — then sends it automatically to the sales team.
+    </p>
+
+    <h3 style="margin-top:32px;">How it works</h3>
+    <ul>
+      <li>Scrapes news + signals via custom APIs, Tavily, and AI summarization.</li>
+      <li>Filters signals by industry, geography, and ICP relevance.</li>
+      <li>Classifies priority using an LLM “relevance ranker.”</li>
+      <li>Bundles everything into a single daily email.</li>
+    </ul>
+
+    <h3 style="margin-top:32px;">Why it's useful</h3>
+    <ul>
+      <li>Reduces manual prospect research.</li>
+      <li>Improves timing and relevance of outbound messaging.</li>
+      <li>Gives reps a reason to reach out — every single day.</li>
+      <li>Keeps big deals warm with signal-based touchpoints.</li>
+    </ul>
+
+    <div style="margin-top:40px;">
+      <a href="index.html#projects" class="btn">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="y"></span> Third Coast AI · Chicago, IL</p>
+    </div>
+  </footer>
+
+  <script>
+    // Set year
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
