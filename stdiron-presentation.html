@@ -457,6 +457,36 @@
 
     .fs-btn:hover { color: var(--muted); }
 
+  /* ── Slide: Evaluation Criteria ── */
+  .eval-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 36px;
+    width: 100%;
+    max-width: 860px;
+  }
+  .eval-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px 28px;
+    text-align: left;
+  }
+  .eval-card h3 {
+    font-size: clamp(24px, 2.8vw, 34px);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .eval-card p {
+    font-size: clamp(14px, 1.5vw, 18px);
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
   </style>
 </head>
 <body>
@@ -603,7 +633,33 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       SLIDE 7 · WORKFLOW PROTOTYPE VIDEO
+       SLIDE 7 · EVALUATION CRITERIA
+       Edit: .eval-card h3 + p text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="3">
+    <h2 class="title">How We Would Evaluate Success</h2>
+    <div class="eval-grid">
+      <div class="eval-card">
+        <h3>Inspection Time</h3>
+        <p>Faster without slowing the line</p>
+      </div>
+      <div class="eval-card">
+        <h3>Missed Defects</h3>
+        <p>Caught before downstream steps</p>
+      </div>
+      <div class="eval-card">
+        <h3>Overkill</h3>
+        <p>Avoid rejecting good assemblies</p>
+      </div>
+      <div class="eval-card">
+        <h3>Operator Consistency</h3>
+        <p>Not dependent on experience</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 8 · WORKFLOW PROTOTYPE VIDEO
        Edit: <source src="…"> path · .v-caption text
   ══════════════════════════════════════════════════════ -->
   <div class="slide" data-phase="4">
@@ -660,6 +716,14 @@
       <span class="big-w w2">Simplify</span>
       <span class="big-w w3">Deploy</span>
     </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 11 · QUESTIONS
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide s-title" data-phase="5">
+    <h2 class="title">Questions?</h2>
+    <p class="sub">Reza Pahl &nbsp;·&nbsp; Vision Sales Engineer &nbsp;·&nbsp; v.rezapahl@gmail.com</p>
   </div>
 
 </div><!-- /deck -->
