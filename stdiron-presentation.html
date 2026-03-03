@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>STD-IRON · Vision SE Presentation</title>
+  <style>
+    /* ════════════════════════════════════════════════
+       BASE
+    ════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #08090d;
+      --surface: #0e1118;
+      --border:  #1c2232;
+      --text:    #edf0f5;
+      --muted:   #56606f;
+      --accent:  #4a9eff;
+      --amber:   #f59e0b;
+      --green:   #22c55e;
+      --red:     #f87171;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+                   'Segoe UI', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ════════════════════════════════════════════════
+       DECK & SLIDES
+    ════════════════════════════════════════════════ */
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Every slide sits in the same position; only .active is visible */
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /* 90px bottom keeps content above the progress bar */
+      padding: 72px 10vw 90px;
+      opacity: 0;
+      transform: scale(0.975) translateY(14px);
+      transition: opacity 0.42s cubic-bezier(.4,0,.2,1),
+                  transform 0.42s cubic-bezier(.4,0,.2,1);
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+
+    /* ════════════════════════════════════════════════
+       TYPOGRAPHY SYSTEM
+    ════════════════════════════════════════════════ */
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.75;
+      margin-bottom: 26px;
+      align-self: center;
+    }
+
+    /* Main slide heading */
+    .title {
+      font-size: clamp(38px, 5.2vw, 70px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.04;
+      text-align: center;
+      color: var(--text);
+    }
+
+    /* Supporting line — kept large per brief */
+    .sub {
+      font-size: clamp(24px, 2.4vw, 30px);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+
+    /* Large accent statement */
+    .quote {
+      font-size: clamp(28px, 3.4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      text-align: center;
+      color: var(--accent);
+      margin-top: 36px;
+    }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 1 · TITLE — subtle glow + dot grid bg
+       To edit: .title text, .sub text, .tag text
+    ════════════════════════════════════════════════ */
+    .s-title {
+      background:
+        radial-gradient(ellipse 65% 45% at 50% -5%,
+          rgba(74,158,255,.09) 0%, transparent 72%);
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(74,158,255,.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,158,255,.022) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    .s-title .title { font-size: clamp(44px, 6.2vw, 82px); }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 2 · CHAIN REACTION DIAGRAM
+       To edit: .c-icon emoji and .c-label text (×5 steps)
+    ════════════════════════════════════════════════ */
+    .chain {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      margin-top: 52px;
+      width: 100%;
+    }
+
+    .c-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      max-width: 140px;
+    }
+
+    .c-icon {
+      width: 72px; height: 72px;
+      border-radius: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .c-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .c-arrow {
+      font-size: 20px;
+      color: var(--border);
+      flex-shrink: 0;
+      margin-top: 25px;
+      padding: 0 6px;
+    }
+
+    /* Escalating severity — icon border warms toward red */
+    .c-step:nth-child(3) .c-icon { border-color: rgba(245,158,11,.38); }
+    .c-step:nth-child(5) .c-icon { border-color: rgba(248,113,113,.38); }
+    .c-step:nth-child(7) .c-icon { border-color: rgba(248,113,113,.58); }
+    .c-step:nth-child(9) .c-icon {
+      border-color: rgba(248,113,113,.82);
+      background: rgba(248,113,113,.07);
+    }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 3 · DISCOVERY FLOW
+       To edit: .f-icon emoji and .f-label text (×4 steps)
+                italic .sub quote at the bottom
+    ════════════════════════════════════════════════ */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 52px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .f-step {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 16px;
+      flex: 1;
+    }
+
+    .f-icon {
+      width: 84px; height: 84px;
+      border-radius: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px;
+    }
+
+    .f-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .f-arrow {
+      font-size: 20px;
+      color: var(--accent);
+      opacity: 0.32;
+      flex-shrink: 0;
+      margin-bottom: 36px;
+      padding: 0 10px;
+    }
+
+    /* ════════════════════════════════════════════════
+       SLIDES 4, 7, 8 · VIDEO PLAYER
+       To edit: <source src="…"> and .v-caption text
+    ════════════════════════════════════════════════ */
+    .v-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 860px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--border);
+      margin-top: 28px;
+    }
+
+    .v-wrap video {
+      width: 100%;
+      display: block;
+      max-height: 52vh;
+      object-fit: contain;
+    }
+
+    /* Frosted play overlay — click to play, auto-shows on pause */
+    .v-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.28);
+      cursor: pointer;
+      transition: opacity .22s;
+    }
+
+    .v-overlay.hidden { opacity: 0; pointer-events: none; }
+
+    .play-ring {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.28);
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .v-overlay:hover .play-ring {
+      transform: scale(1.1);
+      border-color: rgba(255,255,255,.6);
+    }
+
+    .play-ring svg { width: 26px; height: 26px; fill: white; margin-left: 5px; }
+
+    .v-caption {
+      font-size: 12px;
+      letter-spacing: .5px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 5 · THREE-COLUMN CHALLENGE SPLIT
+       To edit: .icon emoji, h3 heading, p description (×3 cards)
+                italic .sub line at bottom
+    ════════════════════════════════════════════════ */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 44px;
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .s-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 22px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      text-align: center;
+    }
+
+    .s-card .icon { font-size: 38px; }
+    .s-card h3 { font-size: 17px; font-weight: 700; color: var(--text); }
+    .s-card p  { font-size: 14px; color: var(--muted); line-height: 1.55; }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 6 · PIVOT / HYPOTHESIS
+       To edit: .title text, .quote text, pivot emoji pair
+    ════════════════════════════════════════════════ */
+    .pivot-icons {
+      display: flex; gap: 28px;
+      margin-top: 44px;
+      opacity: .25;
+    }
+
+    .pivot-icons span { font-size: 52px; }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 9 · RESULT
+       To edit: .title text, .result-stat text
+    ════════════════════════════════════════════════ */
+    .s-result {
+      background:
+        radial-gradient(ellipse 55% 45% at 50% 105%,
+          rgba(34,197,94,.08) 0%, transparent 68%);
+    }
+
+    .result-stat {
+      font-size: clamp(28px, 3.8vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--green);
+      text-align: center;
+      margin-top: 36px;
+      line-height: 1.2;
+    }
+
+    /* ════════════════════════════════════════════════
+       SLIDE 10 · THREE WORDS
+       To edit: .title text and the three .big-w words
+    ════════════════════════════════════════════════ */
+    .three-w {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
+      max-width: 920px;
+      margin-top: 52px;
+    }
+
+    .big-w {
+      font-size: clamp(52px, 7.2vw, 90px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .big-w.w1 { color: var(--accent); }
+    .big-w.w2 { color: var(--text);   }
+    .big-w.w3 { color: var(--green);  }
+
+    /* ════════════════════════════════════════════════
+       PROGRESS BAR
+       Phases: Context → Discovery → Challenge → Hypothesis → Action → Result
+    ════════════════════════════════════════════════ */
+    .progress {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 50px;
+      display: flex; align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0 48px;
+      background: rgba(8,9,13,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+    }
+
+    .ph {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      flex: 1;
+      text-align: center;
+      padding: 6px 0;
+      position: relative;
+      transition: color .3s;
+    }
+
+    /* Active phase indicator */
+    .ph.on { color: var(--accent); }
+
+    .ph.on::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    .ph-sep {
+      width: 1px; height: 12px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* Slide counter */
+    .s-num {
+      position: fixed;
+      bottom: 15px; right: 18px;
+      font-size: 10.5px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      opacity: .5;
+      z-index: 201;
+      letter-spacing: .3px;
+    }
+
+    /* Fullscreen button */
+    .fs-btn {
+      position: fixed;
+      top: 16px; right: 18px;
+      z-index: 201;
+      background: none; border: none;
+      font-size: 10.5px;
+      font-family: inherit;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.15);
+      cursor: pointer;
+      transition: color .2s;
+    }
+
+    .fs-btn:hover { color: var(--muted); }
+
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 1 · TITLE
+       Edit: .tag text · .title text · .sub text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide s-title active" data-phase="-1">
+    <div class="grid-bg"></div>
+    <span class="tag">Vision Sales Engineer · Industrial AI</span>
+    <h1 class="title">STD-IRON: Fixing Inspection<br>Failure in Production</h1>
+    <p class="sub">From AR hypothesis → production-ready solution</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 2 · THE PROBLEM
+       Edit: .c-icon emoji and .c-label text for each of the 5 steps
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="0">
+    <h2 class="title">Defects Were Slipping Through</h2>
+    <div class="chain">
+      <div class="c-step">
+        <div class="c-icon">🔍</div>
+        <div class="c-label">Missed<br>Defect</div>
+      </div>
+      <div class="c-arrow">→</div>
+      <div class="c-step">
+        <div class="c-icon">⬇</div>
+        <div class="c-label">Moves<br>Downstream</div>
+      </div>
+      <div class="c-arrow">→</div>
+      <div class="c-step">
+        <div class="c-icon">🎨</div>
+        <div class="c-label">Painted<br>Over</div>
+      </div>
+      <div class="c-arrow">→</div>
+      <div class="c-step">
+        <div class="c-icon">📦</div>
+        <div class="c-label">Customer<br>Issue</div>
+      </div>
+      <div class="c-arrow">→</div>
+      <div class="c-step">
+        <div class="c-icon">💸</div>
+        <div class="c-label">Expensive<br>Failure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 3 · DISCOVERY
+       Edit: .f-icon emoji and .f-label text for each of the 4 steps
+             italic .sub quote at the bottom
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="1">
+    <h2 class="title">How Inspection Actually Worked</h2>
+    <div class="flow">
+      <div class="f-step">
+        <div class="f-icon">📱</div>
+        <div class="f-label">Tablet</div>
+      </div>
+      <div class="f-arrow">→</div>
+      <div class="f-step">
+        <div class="f-icon">🔢</div>
+        <div class="f-label">Scan Serial</div>
+      </div>
+      <div class="f-arrow">→</div>
+      <div class="f-step">
+        <div class="f-icon">👁</div>
+        <div class="f-label">Manual Inspect</div>
+      </div>
+      <div class="f-arrow">→</div>
+      <div class="f-step">
+        <div class="f-icon">🧠</div>
+        <div class="f-label">Tribal Knowledge</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:40px; font-style:italic;">
+      "Almost entirely dependent on inspector experience."
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 4 · AR INSPECTION VIDEO
+       Edit: <source src="…"> path · .v-caption text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="2">
+    <h2 class="title">Initial Approach: AR Overlay Inspection</h2>
+    <div class="v-wrap">
+      <video preload="metadata">
+        <source src="std-iron-ar-inspection.mp4" type="video/mp4">
+      </video>
+      <div class="v-overlay">
+        <div class="play-ring">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+    <p class="v-caption">Testing AR-assisted inspection onsite</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 5 · THE CHALLENGE
+       Edit: .icon emoji, h3 heading, p text for each of the 3 cards
+             italic .sub line at bottom
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="2">
+    <h2 class="title">Why AR Didn't Deploy Cleanly</h2>
+    <div class="split">
+      <div class="s-card">
+        <span class="icon">🖥</span>
+        <h3>Hardware Friction</h3>
+        <p>Dedicated headsets, calibration overhead, and device management at scale</p>
+      </div>
+      <div class="s-card">
+        <span class="icon">📐</span>
+        <h3>Alignment Issues</h3>
+        <p>Overlay drift in uncontrolled lighting and varied part orientations</p>
+      </div>
+      <div class="s-card">
+        <span class="icon">🔄</span>
+        <h3>Workflow Interruption</h3>
+        <p>Added cognitive steps rather than removing them from the inspector's flow</p>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:32px; font-style:italic;">
+      Technically impressive. Operationally fragile.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 6 · PIVOT / NEW HYPOTHESIS
+       Edit: .title text · .quote text · pivot emoji pair
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="3">
+    <h2 class="title">The Real Problem Was Cognitive Load</h2>
+    <p class="quote">"Make every inspection step<br>impossible to miss."</p>
+    <div class="pivot-icons">
+      <span>🧊</span>
+      <span>⚙️</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 7 · WORKFLOW PROTOTYPE VIDEO
+       Edit: <source src="…"> path · .v-caption text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="4">
+    <h2 class="title">Built a Seamless Workflow Prototype</h2>
+    <div class="v-wrap">
+      <video preload="metadata">
+        <source src="std-iron-workflow-logic-example.mp4" type="video/mp4">
+      </video>
+      <div class="v-overlay">
+        <div class="play-ring">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+    <p class="v-caption">Workflow logic designed around inspection flow</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 8 · END USER EXPERIENCE VIDEO
+       Edit: <source src="…"> path · .v-caption text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="4">
+    <h2 class="title">Operator-Friendly. Fast. Clear.</h2>
+    <div class="v-wrap">
+      <video preload="metadata">
+        <source src="3d-workflow-example-std-iron.mp4" type="video/mp4">
+      </video>
+      <div class="v-overlay">
+        <div class="play-ring">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+    <p class="v-caption">3D-guided inspection on iPad</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 9 · RESULT
+       Edit: .title text · .result-stat text
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide s-result" data-phase="5">
+    <h2 class="title">From Stalled Deal to Closed<br>in 2 Weeks</h2>
+    <p class="result-stat">Live deployment. Strong reception.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 10 · CLOSING
+       Edit: .title text · three .big-w words
+  ══════════════════════════════════════════════════════ -->
+  <div class="slide" data-phase="5">
+    <h2 class="title">What Made This Work</h2>
+    <div class="three-w">
+      <span class="big-w w1">Diagnose</span>
+      <span class="big-w w2">Simplify</span>
+      <span class="big-w w3">Deploy</span>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ════════════════════════════════════════════════
+     PROGRESS BAR
+     data-phase maps to slide data-phase values (0–5)
+════════════════════════════════════════════════ -->
+<nav class="progress" aria-label="Presentation progress">
+  <span class="ph" data-phase="0">Context</span>
+  <div class="ph-sep"></div>
+  <span class="ph" data-phase="1">Discovery</span>
+  <div class="ph-sep"></div>
+  <span class="ph" data-phase="2">Challenge</span>
+  <div class="ph-sep"></div>
+  <span class="ph" data-phase="3">Hypothesis</span>
+  <div class="ph-sep"></div>
+  <span class="ph" data-phase="4">Action</span>
+  <div class="ph-sep"></div>
+  <span class="ph" data-phase="5">Result</span>
+</nav>
+
+<span class="s-num" id="s-num">1 / 10</span>
+
+<button class="fs-btn" id="fs-btn" title="Toggle fullscreen (F)">Fullscreen ↗</button>
+
+<script>
+  /* ════════════════════════════════════════════════
+     SLIDE NAVIGATION
+  ════════════════════════════════════════════════ */
+  const slides  = Array.from(document.querySelectorAll('.slide'));
+  const phases  = Array.from(document.querySelectorAll('.ph'));
+  const numEl   = document.getElementById('s-num');
+  const TOTAL   = slides.length;
+  let   current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= TOTAL || n === current) return;
+
+    // Pause any playing video and restore its overlay on the current slide
+    slides[current].querySelectorAll('video').forEach(v => v.pause());
+    slides[current].querySelectorAll('.v-overlay').forEach(o => o.classList.remove('hidden'));
+
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    updateUI();
+  }
+
+  function updateUI() {
+    numEl.textContent = (current + 1) + ' / ' + TOTAL;
+    const activePhase = parseInt(slides[current].dataset.phase, 10);
+    phases.forEach(p => {
+      const ph = parseInt(p.dataset.phase, 10);
+      p.classList.toggle('on', ph === activePhase && activePhase >= 0);
+    });
+  }
+
+  /* ── Keyboard navigation ── */
+  document.addEventListener('keydown', e => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case ' ':
+        e.preventDefault(); goTo(current + 1); break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault(); goTo(current - 1); break;
+      case 'f':
+      case 'F':
+        toggleFS(); break;
+    }
+  });
+
+  /* ── Fullscreen toggle ── */
+  function toggleFS() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
+  }
+  document.getElementById('fs-btn').addEventListener('click', toggleFS);
+
+  /* ════════════════════════════════════════════════
+     VIDEO PLAYER SETUP
+     Applies to every .v-wrap — no manual IDs needed.
+     To add a new video slide, just copy a slide with
+     .v-wrap and update the <source src="…"> path.
+  ════════════════════════════════════════════════ */
+  document.querySelectorAll('.v-wrap').forEach(wrap => {
+    const video   = wrap.querySelector('video');
+    const overlay = wrap.querySelector('.v-overlay');
+    if (!video || !overlay) return;
+
+    /* Click overlay → play */
+    overlay.addEventListener('click', () => {
+      video.play()
+        .then(() => overlay.classList.add('hidden'))
+        .catch(() => {});
+    });
+
+    /* Pause / end → show overlay */
+    ['pause', 'ended'].forEach(evt =>
+      video.addEventListener(evt, () => overlay.classList.remove('hidden'))
+    );
+
+    /* Click video itself → pause */
+    video.addEventListener('click', () => {
+      if (!video.paused) video.pause();
+    });
+  });
+
+  /* Init */
+  updateUI();
+</script>
+
+</body>
+</html>
